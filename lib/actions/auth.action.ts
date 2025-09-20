@@ -25,7 +25,7 @@ export async function setSessionCookie(idToken: string) {
   });
 }
 
-export async function signUp(params: SignUpParams) {ayh
+export async function signUp(params: SignUpParams) {
   const { uid, name, email } = params;
 
   try {

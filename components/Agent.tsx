@@ -1,101 +1,12 @@
-// import React from 'react'
-// import Image from "next/image";
-// import { cn } from '@/lib/utils';
-// import { useRouter } from 'next/navigation';
-
-
-// enum CallStatus {
-//   INACTIVE = 'INACTIVE',
-//   CONNECTING = 'CONNECTING',
-//   ACTIVE = 'ACTIVE',
-//   FINISHED = 'FINISHED',
-// }
-
-// const Agent = ({ userName, userId, type }: AgentProps) => {
-//   const router = useRouter();
-//   const callStatus = CallStatus.FINISHED; 
-//   const isSpeaking = true;
-//   const messages = [
-//     'Whats your name ?',
-//     'My name is Sakshi, Nice to meet you!'
-//   ];
-//   const lastMessage = messages[messages.length - 1];
-//   return (
-//     <>
-    
-//    <div className="call-view">
-//     <div className="card-interviewer">
-//       <div className="avatar">
-//         <Image src="/ai-avatar.png" alt="vapi" 
-//         width={65}
-//         height={54}
-//         className="object-cover"
-//         />
-//         { isSpeaking && <span className="animate-speak"/>}         
-//       </div>
-//       <h3>AI Interviewer</h3>
-//     </div>
-
-//     <div className="card-border">
-//       <div className="card-content">
-//         <Image src="/user-avatar.png" alt="user-avater"
-//         width = {540} height={450} className="rounded-full object-cover size-[120px] " />
-//         <h3>{userName}</h3>
-//       </div>
-//     </div>
-//    </div>
-
-//     {messages.length  > 0  && (
-
-//       <div className="transcript-border">
-//         <div className="transcript">
-//           <p key={lastMessage} className="{cn('transition-opacity duration-500 opactiy-0, 'animate-fadeIn opacity-100')}">
-//             {lastMessage}
-
-//           </p>
-//         </div> 
-//       </div>
-
-//     )}
-
-//    <div className="w-full flex justify-center">
-
-//     { callStatus !== 'ACTIVE' ? (
-//       <button className="relative btn-call">
-//          <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'CONNECTING' & 'hidden')} />
-        
-
-//           <span>
-//           { callStatus === 'INACTIVE' || callStatus === 'FINISHED' ? 'Call' : '. . .'}
-
-//           </span>
-
-//       </button>
-//     ) : (
-//       <button className="btn-disconnect">
-//         END
-//       </button>
-//     )
-//     }
-
-
-//    </div>
-//     </>
-//   )
-// }
-
-// export default Agent
-
-
 "use client";
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
-// import { interviewer } from "@/constants";
-// import { createFeedback }  from "@/lib/actions/auth.action"
+import { interviewer } from "@/constants";
 // import { createFeedback } from "@/lib/actions/general.action";
 
 enum CallStatus {
@@ -140,14 +51,12 @@ const Agent = ({
       }
     };
 
-    const onSpeechStart = () => setIsSpeaking(true);
-    // {
-    //   console.log("speech start");
-    //   setIsSpeaking(true);
-    // };
+    const onSpeechStart = () => {
+      console.log("speech start");
+      setIsSpeaking(true);
+    };
 
-    const onSpeechEnd = () =>  setIsSpeaking(false);
-      {
+    const onSpeechEnd = () => {
       console.log("speech end");
       setIsSpeaking(false);
     };
@@ -231,7 +140,6 @@ const Agent = ({
   //   }
   // };
 
-
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
 
@@ -265,13 +173,11 @@ const Agent = ({
   };
 
 
+
   const handleDisconnect = () => {
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
   };
-
-  const latestMessage = messages[messages.length - 1]?.content;
-  const isCallInactiveOrFinished = callStatus === CallStatus.INACTIVE || callStatus === callStatus.FINISHED;
 
   return (
     <>
@@ -310,13 +216,13 @@ const Agent = ({
         <div className="transcript-border">
           <div className="transcript">
             <p
-              key={latestMessage}
+              key={lastMessage}
               className={cn(
                 "transition-opacity duration-500 opacity-0",
                 "animate-fadeIn opacity-100"
               )}
             >
-              {latestMessage}
+              {lastMessage}
             </p>
           </div>
         </div>
@@ -331,18 +237,12 @@ const Agent = ({
                 callStatus !== "CONNECTING" && "hidden"
               )}
             />
-            {/* 
+
             <span className="relative">
               {callStatus === "INACTIVE" || callStatus === "FINISHED"
                 ? "Call"
                 : ". . ."}
-            </span> 
-            */}
-
-            <span>
-              {isCallInactiveOrFinished ? 'Call' : 'Wait! we are connecting'}
             </span>
-
           </button>
         ) : (
           <button className="btn-disconnect" onClick={() => handleDisconnect()}>

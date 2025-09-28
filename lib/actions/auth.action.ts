@@ -1,13 +1,15 @@
+
+
 "use server";
 
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
 
 // Session duration (1 week)
-const SESSION_DURATION = 60 * 60 * 24 * 7;  // 7Days
+const SESSION_DURATION = 60 * 60 * 24 * 7;
 
 // Set session cookie
-export async function setSessionCookie(idToken: string) {  
+export async function setSessionCookie(idToken: string) {
   const cookieStore = await cookies();
 
   // Create session cookie
@@ -15,13 +17,13 @@ export async function setSessionCookie(idToken: string) {
     expiresIn: SESSION_DURATION * 1000, // milliseconds
   });
 
-  // Set cookie in the browser  
+  // Set cookie in the browser
   cookieStore.set("session", sessionCookie, {
     maxAge: SESSION_DURATION,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    sameSite: "lax",     
+    sameSite: "lax",
   });
 }
 
@@ -31,23 +33,22 @@ export async function signUp(params: SignUpParams) {
   try {
     // check if user exists in db
     const userRecord = await db.collection("users").doc(uid).get();
-    if (userRecord.exists){
+    if (userRecord.exists)
       return {
         success: false,
         message: "User already exists. Please sign in.",
-      }
       };
 
     // save user to db
     await db.collection("users").doc(uid).set({
-      name, 
-      email
+      name,
+      email,
       // profileURL,
       // resumeURL,
     });
 
     return {
-      success: true,       
+      success: true,
       message: "Account created successfully. Please sign in.",
     };
   } catch (error: any) {
@@ -98,7 +99,7 @@ export async function signOut() {
 }
 
 // Get current user from session cookie
-export async function getCurrentUser(): Promise<User | null> { 
+export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
 
   const sessionCookie = cookieStore.get("session")?.value;
